@@ -1,0 +1,25 @@
+# Instance additions to the runtime. Instance-owned; the boilerplate ships it empty.
+#
+# Merged after core/compose.yml and hosting/<profile>/compose.yml, so this is
+# where a deployment adds services, env or mounts without editing upstream
+# files. Examples (see docs/extension-points.md):
+#
+#   services:
+#     claw:
+#       environment:
+#         PGHOST: dev-db
+#       volumes:
+#         - ${CLAW_DATA}/bundle:/home/node/.bundle   # + CLAW_EXTRA_DATA_DIRS=bundle
+#     dev-db:
+#       image: postgres:17-bookworm
+#       networks: [claw]
+# No model key: people sign in with their own subscription in Settings → Models.
+# An API key is for automated tests, which start their own gateway, and for
+# the wtc plugin's project suggestion (OpenAI's Decisions API, which a
+# subscription does not cover). It reaches the gateway only under a name of
+# its own, so OpenClaw's OpenAI provider, and the chat model, never use it.
+# Taken from the caller's OPENAI_API_KEY (the collection env) unless set.
+services:
+  claw:
+    environment:
+      WTC_DECISIONS_OPENAI_API_KEY: ${WTC_DECISIONS_OPENAI_API_KEY:-${OPENAI_API_KEY:-}}

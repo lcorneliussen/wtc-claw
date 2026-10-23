@@ -1,0 +1,5 @@
+# Patterns that must never reach the public boilerplate (tools/upstream backport).
+# One extended regex per line, case-insensitive. This file is instance-owned and
+# never exported. This instance is public: terms it must not publish itself go
+# in the ignored .secrets/private-terms, which the backport reads too.
+wtc-claw
