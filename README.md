@@ -80,6 +80,24 @@ a distinct service name and start only the recipe they intend to use.
 with a disposable Compose stub, including failed deployment rollback and
 termination cleanup, without starting Docker or touching a running gateway.
 
+### Verify an upgrade
+
+After upgrading the pinned image or installing a matching plugin, check the
+running components, not only the gateway's health endpoint:
+
+```sh
+bin/claw compose exec -T claw wtc --version
+bin/claw openclaw health --json
+bin/claw openclaw gateway call plugins.sessionAction --json \
+  --params '{"pluginId":"wtc","actionId":"collection","agentId":"main","sessionKey":"agent:main:wtc-version-check"}'
+bin/claw openclaw gateway call models.list --json
+```
+
+Confirm that the CLI and loaded wtc plugin versions match, wtc and any plugin
+providing the selected model's agent runtime are loaded, and the chosen model is
+available after sign-in. A healthy gateway can still have its selected agent
+runtime disabled. Reload Control UI tabs after updating the plugin.
+
 ## Layout
 
 The generic parts are the boilerplate's — see `docs/` and
