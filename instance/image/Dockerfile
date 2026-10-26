@@ -53,9 +53,9 @@ FROM debian:bookworm-slim AS wtc
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl && \
     rm -rf /var/lib/apt/lists/*
 ARG TARGETARCH
-ARG WTC_VERSION=0.1.57
-ARG WTC_SHA256_AMD64=e45a563bcf160813bd3da884dd88d28a736da948dab2a973b8646bccf0dd5d2f
-ARG WTC_SHA256_ARM64=f8953f8c78f4786b7ff2cb6ecf2c4ba3d4085a2259c3311fe0b4f669e03312b8
+ARG WTC_VERSION=0.1.59
+ARG WTC_SHA256_AMD64=a41a12b9f706922c70b0e7e1cf54357d663659ddfe260363dbc3be410f7f914c
+ARG WTC_SHA256_ARM64=f0e39aa0d72f4d9f826b1824a10ce739de164c1fccc7620a2399ddc546fdbf22
 RUN set -eu; \
     case "${TARGETARCH:-amd64}" in \
       amd64) sum="$WTC_SHA256_AMD64" ;; \
