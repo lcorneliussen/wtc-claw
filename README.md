@@ -47,6 +47,39 @@ nothing in this repository signs in for you:
 Inside a worktree collection the port is the collection's `WTC_CLAW_PORT`
 (`.env.collection`), so every collection can run its own claw.
 
+### Run as a collection service
+
+The committed `.harness/dekit.tasks.yaml` defines `wtc-claw/claw` for
+collections whose harness enables the dekit runtime. From the collection root:
+
+```sh
+wtc svc up wtc-claw/claw
+wtc svc logs wtc-claw/claw
+wtc svc down wtc-claw/claw
+```
+
+Starting it deploys the gateway with `CLAW_BUILD=auto`, then keeps Compose in
+the foreground. Stopping the service stops its gateway container. Each
+collection uses its allocated port and Compose project name. The first start
+still needs the Docker and model setup described above. Adding the repository
+or checking status does not start the service.
+
+Tunnels stay opt-in for each collection:
+
+```sh
+wtc svc tunnel wtc-claw/claw tailscale
+```
+
+If a collection already registered `claw/main` in its local
+`.wtc/svc/wtc-claw.yaml`, remove that local task when adopting the shared
+definition; retain any tunnel tasks. Duplicate task names are rejected.
+Collections using a custom Compose recipe should keep that local task under
+a distinct service name and start only the recipe they intend to use.
+
+`python3 -I instance/tests/shared_service_test.py` checks this service command
+with a disposable Compose stub, including failed deployment rollback and
+termination cleanup, without starting Docker or touching a running gateway.
+
 ## Layout
 
 The generic parts are the boilerplate's — see `docs/` and

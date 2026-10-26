@@ -1,0 +1,19 @@
+tasks:
+  claw/main:
+    autostart: true
+    cmd:
+      - sh
+      - -c
+      - |
+        # Stop detached containers, including a deployment's rollback, when
+        # the foreground service ends; otherwise their restart policy survives it.
+        trap 'status=$?; trap - EXIT; bin/claw compose stop claw; exit "$status"' EXIT
+        trap 'exit 0' TERM INT
+        bin/claw compose stop claw >/dev/null 2>&1
+        CLAW_BUILD=auto bin/claw deploy || exit $?
+        bin/claw compose up claw & wait $!
+    label: OpenClaw gateway with the wtc plugin
+    ready:
+      timeout: 360s
+    x-wtc:
+      port_env: WTC_CLAW_PORT
