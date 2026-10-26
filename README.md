@@ -76,6 +76,10 @@ definition; retain any tunnel tasks. Duplicate task names are rejected.
 Collections using a custom Compose recipe should keep that local task under
 a distinct service name and start only the recipe they intend to use.
 
+`python3 -I instance/tests/shared_service_test.py` checks this service command
+with a disposable Compose stub, including failed deployment rollback and
+termination cleanup, without starting Docker or touching a running gateway.
+
 ## Layout
 
 The generic parts are the boilerplate's — see `docs/` and

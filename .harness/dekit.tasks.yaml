@@ -5,11 +5,12 @@ tasks:
       - sh
       - -c
       - |
-        # The gateway must be down while deploy configures it, and stays down
-        # when this task stops: the container restarts on its own otherwise.
+        # Stop detached containers, including a deployment's rollback, when
+        # the foreground service ends; otherwise their restart policy survives it.
+        trap 'status=$?; trap - EXIT; bin/claw compose stop claw; exit "$status"' EXIT
+        trap 'exit 0' TERM INT
         bin/claw compose stop claw >/dev/null 2>&1
-        trap 'bin/claw compose stop claw; exit 0' TERM INT
-        CLAW_BUILD=auto bin/claw deploy || exit 1
+        CLAW_BUILD=auto bin/claw deploy || exit $?
         bin/claw compose up claw & wait $!
     label: OpenClaw gateway with the wtc plugin
     ready:
