@@ -24,6 +24,8 @@ jobs:
         run: tests/upstream_backport_test.sh
       - name: Shared service lifecycle tests
         run: python3 -I instance/tests/shared_service_test.py
+      - name: Agent configuration preservation tests
+        run: python3 -I instance/tests/configure_agents_test.py
 
   local-e2e:
     # The local profile runs for real: build, configure, doctor, start, health,
